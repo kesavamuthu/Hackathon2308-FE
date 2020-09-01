@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,12 +35,22 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
 
 body {
   padding: 20px;
 }
 
 a {
-  color: "black" !important;
+  color: black !important;
+}
+
+.filter {
+  display: inline-flex;
+  width: 80%;
+}
+
+.filter > div:not(:first-child) {
+  display: inline-flexbox;
+  justify-content: flex-end;
 }

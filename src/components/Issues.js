@@ -34,6 +34,7 @@ const Issues = () => {
   const [filteredValues, filteredValueModifier] = useState([]);
   useEffect(() => {
     labels.length = 0;
+    labels.push("unlabeled");
     issues.forEach((e) => labels.push(...e.labels));
     console.log("calling hook");
     filteredValueModifier(issues);
@@ -44,17 +45,32 @@ const Issues = () => {
       <Filters
         filters={["all", "open", "closed"]}
         selectedFilter="all"
-        onClick={modifier}
+        onClick={modifiyBasedOnStatus}
       />
       <AddIssueBtn />
       {/*Props Passed to issuesList is the array of issues and filter selected*/}
-      <IssueList issues={filteredValues} filter="all" labels={labels} />
+      <IssueList
+        issues={filteredValues}
+        filter="all"
+        labels={labels}
+        onClick={modifiyBasedOnLabels}
+      />
       <Pagination />
     </>
   );
-  function modifier(event) {
+  function modifiyBasedOnStatus(event) {
     if (event.target.value === "all") return filteredValueModifier(issues);
     filteredValueModifier(issues.filter((e) => event.target.value === e.state));
+  }
+
+  function modifiyBasedOnLabels(event) {
+    console.log("event her ", event.target.textContent.trim());
+    if (!event.target.textContent) return;
+    if (event.target.textContent.trim() === "unlabeled")
+      return filteredValueModifier(issues);
+    filteredValueModifier(
+      issues.filter((e) => e.labels.includes(event.target.textContent.trim()))
+    );
   }
 };
 

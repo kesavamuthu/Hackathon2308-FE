@@ -13,7 +13,11 @@ export default (props) => {
         >
           {props.name}
         </div>
-        <div className="dropdown-menu" style={{ cursor: "pointer" }}>
+        <div
+          className="dropdown-menu"
+          style={{ cursor: "pointer" }}
+          onClick={props.onClick}
+        >
           <input
             type="text"
             className="form-control "

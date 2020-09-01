@@ -22,7 +22,11 @@ const IssuesList = (props) => {
         >
           Issues
           <span className="badge">
-            <DropDown name="labels" labels={props.labels} />
+            <DropDown
+              name="labels"
+              labels={props.labels}
+              onClick={props.onClick}
+            />
           </span>
           <span className="badge badge-primary badge-pill">14</span>
         </li>
