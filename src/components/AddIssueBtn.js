@@ -1,8 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Modal from "./modal";
 
+const permLabels = [];
 const AddIssueBtn = () => {
   const [initModal, modalStateChanger] = useState(false);
+  const [labels, labelModifier] = useState([]);
+  const [issue, issueModifier] = useState({ labels: [] });
 
+  useEffect(() => {
+    permLabels.length = 0;
+    permLabels.push(
+      ...["unlabeled", "issue", "bug_report", "issue4", "bug_report5"]
+    );
+    labelModifier(permLabels);
+  }, []);
+  // console.log(issue);
   return (
     <>
       <div style={{ display: "inline-block", margin: "4px" }}>
@@ -15,83 +27,49 @@ const AddIssueBtn = () => {
         </button>
       </div>
       {!initModal ? null : (
-        <div
-          className="modal"
-          id="exampleModal"
-          tabIndex="-1"
-          aria-labelledby="exampleModalLabel"
-          aria-hidden="true"
-          style={{ display: "inline-block" }}
-        >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">
-                  Title:
-                </h5>
-                <input type="text" />
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                  onClick={() => modalStateChanger(false)}
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label htmlFor="exampleFormControlTextarea1">
-                    Description :
-                  </label>
-                  <textarea
-                    className="form-control"
-                    id="exampleFormControlTextarea1"
-                    rows="3"
-                    placeholder="Enter your description"
-                  ></textarea>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="exampleFormControlInput1">Labels</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="exampleFormControlInput1"
-                    placeholder="Add new labels & select existing one"
-                  />
-                  <select
-                    multiple
-                    className="form-control"
-                    id="exampleFormControlSelect2"
-                  >
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                  </select>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                  onClick={() => modalStateChanger(false)}
-                >
-                  Close
-                </button>
-                <button type="button" className="btn btn-primary">
-                  Save changes
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Modal
+          onClick={() => modalStateChanger(false)}
+          labels={labels}
+          onLabelChange={labelChanger}
+          onChangeForSelect={multiSelectHelper}
+          onInputForDesc={(event) =>
+            issueModifier({ ...issue, description: event.target.value })
+          }
+          onInputForTitle={(event) =>
+            issueModifier({ ...issue, title: event.target.value })
+          }
+          value={issue}
+        />
       )}
     </>
   );
+
+  function labelChanger(event) {
+    console.log(event.target.value, event.key);
+    if (
+      event.key === "Enter" &&
+      event.target.value &&
+      permLabels.indexOf(event.target.value) === -1
+    )
+      labelModifier(permLabels.push(event.target.value));
+    if (!event.target.value) return labelModifier(permLabels);
+    console.log(labels);
+    labelModifier(permLabels.filter((e) => e.includes(event.target.value)));
+  }
+
+  function multiSelectHelper(event) {
+    console.log(event.target.value);
+    if (issue.labels.includes(event.target.value))
+      return issueModifier({
+        ...issue,
+        labels: issue.labels.filter((e) => e !== event.target.value),
+      });
+
+    issueModifier({
+      ...issue,
+      labels: [...issue.labels, event.target.value],
+    });
+  }
 };
 
 export default AddIssueBtn;
