@@ -1,4 +1,5 @@
 import React from "react";
+import DropDown from "./DropDown";
 
 const IssuesList = (props) => {
   return (
@@ -20,15 +21,24 @@ const IssuesList = (props) => {
           }}
         >
           Issues
+          <span className="badge">
+            <DropDown name="labels" labels={props.labels} />
+          </span>
           <span className="badge badge-primary badge-pill">14</span>
         </li>
-        {props.issues.map((e) => (
-          <li className="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+        {props.issues.map((e, j) => (
+          <li
+            className="list-group-item d-flex justify-content-between align-items-center list-group-item-action"
+            key={j}
+          >
             <a href={e.url}> {e.name}</a>
-            {e.labels.map((e1) => (
+            <p>#{e.id}</p>
+
+            {e.labels.map((e1, i) => (
               <span
                 className="badge badge-secondary badge-pill"
                 style={{ justifyContent: "flex-start" }}
+                key={i}
               >
                 {e1}
               </span>

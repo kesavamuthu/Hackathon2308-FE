@@ -28,19 +28,36 @@ const issues = [
     locked: "false",
   },
 ];
+const labels = [];
 
 const Issues = () => {
-  const [init, initModifier] = useState(0);
-  useEffect(() => {});
+  const [filteredValues, filteredValueModifier] = useState([]);
+  useEffect(() => {
+    labels.length = 0;
+    issues.forEach((e) => labels.push(...e.labels));
+    console.log("calling hook");
+    filteredValueModifier(issues);
+  }, []);
+  console.log(labels);
   return (
     <>
-      <Filters filters={["all", "open", "closed"]} selectedFilter="all" />
+      <Filters
+        filters={["all", "open", "closed"]}
+        selectedFilter="all"
+        onClick={modifier}
+      />
       <AddIssueBtn />
       {/*Props Passed to issuesList is the array of issues and filter selected*/}
-      <IssueList issues={issues} filter="all" />
+      <IssueList issues={filteredValues} filter="all" labels={labels} />
       <Pagination />
     </>
   );
+  function modifier(event) {
+    if (event.target.value === "all") return filteredValueModifier(issues);
+    filteredValueModifier(issues.filter((e) => event.target.value === e.state));
+  }
 };
+
+function manipulateLabels(event) {}
 
 export default Issues;
